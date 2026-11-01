@@ -112,7 +112,3 @@ All colours and shapes live in `style.css`. The stylesheet uses literal colours 
 - Output folder opening depends on the OS file manager being available to `java.awt.Desktop`.
 - The app talks to the `ffmpeg` executable found on `PATH`; a custom FFmpeg location is not configurable yet.
 
-## License
-
-Add a license of your choice (for example MIT) as `LICENSE` before publishing.
-FFmpeg is a separate project under its own licence and is **not** distributed with this application.
