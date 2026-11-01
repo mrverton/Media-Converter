@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.neonconv.WaveVisualizer?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.ProgressBar?>
+<?import javafx.scene.control.Slider?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.shape.SVGPath?>
+
+<BorderPane fx:id="root" styleClass="app-root"
+            xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.neonconv.MainController">
+
+    <!-- ===== top: title + FFmpeg status ===== -->
+    <top>
+        <HBox styleClass="topbar" alignment="CENTER_LEFT" spacing="8">
+            <Label styleClass="app-title" text="Media Converter"/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <HBox fx:id="statusPill" styleClass="status-pill, idle" alignment="CENTER_RIGHT" spacing="6">
+                <Label styleClass="hint" text="FFmpeg:"/>
+                <Label fx:id="statusLabel" styleClass="status-text" text="checking..."/>
+            </HBox>
+        </HBox>
+    </top>
+
+    <!-- ===== center: drop zone + queue ===== -->
+    <center>
+        <VBox spacing="8">
+            <BorderPane.margin>
+                <Insets top="10" right="6" bottom="0" left="12"/>
+            </BorderPane.margin>
+
+            <StackPane fx:id="dropZone" styleClass="drop-zone" minHeight="110" prefHeight="110" maxHeight="110">
+                <Rectangle fx:id="dropBorder" styleClass="drop-border" managed="false" mouseTransparent="true"/>
+                <VBox alignment="CENTER" spacing="6" mouseTransparent="true">
+                    <SVGPath styleClass="drop-icon"
+                             content="M22 6 h4 v16 h8 L24 34 L14 22 h8 Z M10 38 h28 v4 H10 Z"
+                             scaleX="0.7" scaleY="0.7"/>
+                    <Label styleClass="drop-title" text="Drop audio / video files or folders here"/>
+                    <Label styleClass="drop-sub" text="or click to select files"/>
+                </VBox>
+            </StackPane>
+
+            <HBox alignment="CENTER_LEFT" spacing="6">
+                <Label styleClass="section-title" text="Files:"/>
+                <Label fx:id="queueCountLabel" styleClass="count-badge" text="0"/>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Button text="Add files..." onAction="#onAddFiles"/>
+                <Button text="Add folder..." onAction="#onAddFolder"/>
+                <Button text="Remove done" onAction="#onClearCompleted"/>
+                <Button text="Clear all" onAction="#onClearAll"/>
+            </HBox>
+
+            <ListView fx:id="queueList" styleClass="queue-list" VBox.vgrow="ALWAYS"/>
+        </VBox>
+    </center>
+
+    <!-- ===== right: parameters ===== -->
+    <right>
+        <VBox styleClass="group-box" prefWidth="310" minWidth="310" maxWidth="310" spacing="12">
+            <BorderPane.margin>
+                <Insets top="10" right="12" bottom="0" left="6"/>
+            </BorderPane.margin>
+
+            <Label styleClass="group-title" text="Parameters"/>
+
+            <VBox spacing="4">
+                <Label styleClass="field-label" text="Output format:"/>
+                <ComboBox fx:id="formatCombo" styleClass="neon-combo" maxWidth="Infinity"/>
+            </VBox>
+
+            <VBox spacing="4">
+                <HBox alignment="CENTER_LEFT">
+                    <Label styleClass="field-label" text="Bitrate:"/>
+                    <Region HBox.hgrow="ALWAYS"/>
+                    <Label fx:id="bitrateLabel" styleClass="value-label"/>
+                </HBox>
+                <Slider fx:id="bitrateSlider" styleClass="neon-slider"/>
+                <HBox>
+                    <Label styleClass="hint" text="128"/>
+                    <Region HBox.hgrow="ALWAYS"/>
+                    <Label styleClass="hint" text="320"/>
+                </HBox>
+                <Label fx:id="bitrateHint" styleClass="hint" wrapText="true"/>
+            </VBox>
+
+            <VBox spacing="4">
+                <Label styleClass="field-label" text="Performance:"/>
+                <ComboBox fx:id="jobsCombo" styleClass="neon-combo" maxWidth="Infinity"/>
+            </VBox>
+
+            <VBox spacing="4">
+                <Label styleClass="field-label" text="Output folder:"/>
+                <HBox spacing="6">
+                    <TextField fx:id="destinationField" styleClass="neon-field" editable="false"
+                               focusTraversable="false" HBox.hgrow="ALWAYS"/>
+                    <Button fx:id="browseButton" text="Select..." onAction="#onBrowseDestination"/>
+                </HBox>
+                <CheckBox fx:id="sameFolderCheck" styleClass="neon-check" text="Save next to source files"/>
+            </VBox>
+
+            <Region VBox.vgrow="ALWAYS"/>
+
+            <VBox spacing="2">
+                <Label styleClass="field-label" text="Engine:"/>
+                <Label fx:id="engineInfoLabel" styleClass="hint" wrapText="true"/>
+            </VBox>
+        </VBox>
+    </right>
+
+    <!-- ===== bottom: progress + buttons ===== -->
+    <bottom>
+        <VBox styleClass="action-bar" spacing="8">
+            <HBox alignment="CENTER_LEFT" spacing="8">
+                <!-- kept so the controller's field is still injected; hidden in the classic theme -->
+                <WaveVisualizer fx:id="visualizer" visible="false" managed="false"/>
+                <Label fx:id="overallLabel" styleClass="overall-label"/>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Label fx:id="etaLabel" styleClass="eta-label"/>
+            </HBox>
+            <ProgressBar fx:id="overallBar" styleClass="overall-bar" progress="0" maxWidth="Infinity"/>
+            <HBox alignment="CENTER_RIGHT" spacing="8">
+                <Button fx:id="cancelButton" text="Cancel" onAction="#onCancel"/>
+                <Button fx:id="convertButton" text="Convert" defaultButton="true" onAction="#onConvert"/>
+            </HBox>
+        </VBox>
+    </bottom>
+</BorderPane>
